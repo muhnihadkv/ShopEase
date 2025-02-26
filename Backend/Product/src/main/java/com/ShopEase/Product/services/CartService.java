@@ -48,7 +48,12 @@ public class CartService {
     public Cart updateCart(CartQuantityDto cartQuantityDto) {
         Cart cart = cartRepository.findById(cartQuantityDto.getCartId()).orElse(null);
         cart.setQuantity(cartQuantityDto.getQuantity());
-        cartRepository.save(cart);
+        if(cartQuantityDto.getQuantity()==0){
+            deleteById(cartQuantityDto.getCartId());
+        }
+        else {
+            cartRepository.save(cart);
+        }
         return  cart;
     }
 

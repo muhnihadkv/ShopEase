@@ -6,6 +6,7 @@ import com.ShopEase.User.entities.User;
 import com.ShopEase.User.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,17 +14,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public UserService(UserRepository userRepository, AuthenticationManager authenticationManager, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerUser(LoginDto loginDto) {
         User user = new User();
         user.setEmail(loginDto.getEmail());
-        user.setPassword(loginDto.getPassword());
+        user.setPassword(passwordEncoder.encode(loginDto.getPassword()));
         user.setName(loginDto.getName());
         user.setRole(Roles.USER);
         userRepository.save(user);

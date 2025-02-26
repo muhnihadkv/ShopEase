@@ -35,13 +35,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/getById/productId")
+    @GetMapping("/getById/{productId}")
     public ResponseEntity<Product> getById(@PathVariable int productId){
         Product product = productService.getById(productId);
         return ResponseEntity.ok(product);
     }
 
-    @DeleteMapping("deleteById/productId")
+    @DeleteMapping("deleteById/{productId}")
     public ResponseEntity<String> deleteById(@PathVariable int productId){
         productService.deleteById(productId);
         return ResponseEntity.ok("deleted successfully");

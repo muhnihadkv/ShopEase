@@ -1,17 +1,26 @@
 package com.ShopEase.Product.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Entity
+@Entity
+@Table(name = "`order`")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
-//    @Id
-//
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderId;
+
+    private int userId;
+
+    @ManyToOne
+    @JoinColumn(name = "productId",referencedColumnName = "productId",nullable = false)
+    private Product product;
+
+    private int quantity;
+    private Status status;
 }

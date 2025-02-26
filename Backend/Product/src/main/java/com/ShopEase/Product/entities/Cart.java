@@ -15,7 +15,7 @@ public class Cart {
     private int cartId;
     private int userId;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "productId", referencedColumnName = "productId", nullable = false)
     private Product product;
 
