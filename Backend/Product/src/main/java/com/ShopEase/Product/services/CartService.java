@@ -26,23 +26,23 @@ public class CartService {
         this.builder = builder;
     }
 
-    public Cart addCart(CartDto cartDto, HttpServletRequest request) {
+    public Cart addCart(CartDto cartDto, String authHeader) {
         Cart cart = new Cart();
         cart.setProduct(productRepository.findById(cartDto.getProductId()).orElse(null));
-        cart.setUserId(getUserId(request));
+        cart.setUserId(getUserId(authHeader));
         cart.setQuantity(cartDto.getQuantity());
         cartRepository.save(cart);
         return cart;
     }
 
-    private int getUserId(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
+    private int getUserId(String authHeader) {
+        String token = authHeader.substring(7);
         return builder.build().get()
                 .uri(url + token).retrieve().bodyToMono(Integer.class).block();
     }
 
-    public List<Cart> getByUserId(HttpServletRequest request) {
-        return cartRepository.findAllByUserId(getUserId(request));
+    public List<Cart> getByUserId(String authHeader) {
+        return cartRepository.findAllByUserId(getUserId(authHeader));
     }
 
     public Cart updateCart(CartQuantityDto cartQuantityDto) {

@@ -18,6 +18,12 @@ spring:
             - Path=/product/**, /cart/**, /order/**
           filters:
             - JwtAuthFilter
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+            - JwtAuthFilter
 
 eureka:
   client:

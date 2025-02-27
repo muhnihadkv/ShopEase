@@ -21,14 +21,14 @@ public class CartController {
 
     @PostMapping("/add")
     public ResponseEntity<Cart> addCart(@RequestBody CartDto cartDto,
-                                        HttpServletRequest request){
-        Cart cart = cartService.addCart(cartDto, request);
+                                        @RequestHeader("Authorization") String authHeader){
+        Cart cart = cartService.addCart(cartDto, authHeader);
         return ResponseEntity.ok(cart);
     }
 
     @GetMapping("/getByUserId")
-    public ResponseEntity<List<Cart>> getByUserId(HttpServletRequest request){
-        List<Cart> carts = cartService.getByUserId(request);
+    public ResponseEntity<List<Cart>> getByUserId(@RequestHeader("Authorization") String authHeader){
+        List<Cart> carts = cartService.getByUserId(authHeader);
         return ResponseEntity.ok(carts);
     }
 

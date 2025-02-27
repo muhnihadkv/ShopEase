@@ -3,7 +3,6 @@ package com.ShopEase.Product.controllers;
 import com.ShopEase.Product.dtos.OrderDto;
 import com.ShopEase.Product.entities.Order;
 import com.ShopEase.Product.services.OrderService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +19,14 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody OrderDto orderDto,
-                                             HttpServletRequest request){
-        Order order = orderService.createOrder(orderDto, request);
+                                             @RequestHeader("Authorization") String authHeader){
+        Order order = orderService.createOrder(orderDto, authHeader);
         return ResponseEntity.ok(order);
     }
 
     @GetMapping("/getByUserId")
-    public ResponseEntity<List<Order>> getByUserId(HttpServletRequest request){
-        List<Order> orders = orderService.getByUserId(request);
+    public ResponseEntity<List<Order>> getByUserId(@RequestHeader("Authorization") String authHeader){
+        List<Order> orders = orderService.getByUserId(authHeader);
         return ResponseEntity.ok(orders);
     }
 
@@ -35,5 +34,15 @@ public class OrderController {
     public ResponseEntity<Order> getOrder(@PathVariable int orderId){
         Order order = orderService.getOrder(orderId);
         return ResponseEntity.ok(order);
+    }
+
+    @PutMapping("/paymentSuccess/{orderId}")
+    public void paymentSuccess(@PathVariable int orderId){
+        orderService.paymentSuccess(orderId);
+    }
+
+    @PutMapping("/paymentFailed/{orderId}")
+    public void paymentFailed(@PathVariable int orderId){
+        orderService.paymentFailed(orderId);
     }
 }
