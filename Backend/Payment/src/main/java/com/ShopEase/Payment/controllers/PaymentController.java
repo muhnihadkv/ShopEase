@@ -6,6 +6,7 @@ import com.ShopEase.Payment.entities.Payment;
 import com.ShopEase.Payment.services.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/payment")
@@ -17,16 +18,14 @@ public class PaymentController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkOut(@RequestBody PaymentRequest paymentRequest){
-        StripeResponse response = paymentService.checkoutProducts(paymentRequest);
-        return ResponseEntity.ok(response);
+    public Mono<StripeResponse> checkOut(@RequestBody PaymentRequest paymentRequest){
+        return paymentService.checkoutProducts(paymentRequest);
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<String> handleStripeEvent(@RequestBody String payload,
+    public Mono<String>  handleStripeEvent(@RequestBody String payload,
                                                     @RequestHeader("Stripe-Signature") String sigHeader){
-        String response = paymentService.handleStripeEvent(payload, sigHeader);
-        return ResponseEntity.ok(response);
+        return paymentService.handleStripeEvent(payload, sigHeader);
     }
 
     @GetMapping("/getStatus/{paymentId}")

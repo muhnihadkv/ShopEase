@@ -65,13 +65,13 @@ public class OrderService {
     }
 
     public void paymentSuccess(int orderId) {
-        Order order = orderRepository.findById(orderId).orElse(null);
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new NoSuchElementException("order not found"));
         order.setStatus(Status.PLACED);
         orderRepository.save(order);
     }
 
     public void paymentFailed(int orderId) {
-        Order order = orderRepository.findById(orderId).orElse(null);
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new NoSuchElementException("order not found"));
         order.setStatus(Status.CANCELLED);
         orderRepository.save(order);
 
