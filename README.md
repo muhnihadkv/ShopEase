@@ -8,7 +8,7 @@ ShopEase is a simple e-commerce application built using Spring Boot that allows 
 - ✅ Reactive Programming with WebFlux – For efficient and non-blocking operations  
 - ✅ JWT Authentication – Secure access control for users  
 - ✅ Stripe Integration – Smooth and secure payment processing  
-- ✅ MySQL Database (Separate DB for each microservice) – Reliable and efficient data management  
+- ✅ MySQL Database – Reliable and efficient data management  
 
 ## 🏗️ Microservices Architecture
 
@@ -34,8 +34,8 @@ ShopEase is built with a microservices architecture consisting of the following 
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/shopease.git
-cd shopease
+git clone https://github.com/muhnihadkv/ShopEase.git
+cd ShopEase
 ```
 
 ### 2️⃣ Set up MySQL Databases
@@ -92,27 +92,27 @@ For webhook setup, refer to the [Stripe Webhooks Documentation](https://stripe.c
 Start the Service Registry first:
 
 ```bash
-cd service-registry
+cd Service-Registry
 mvn spring-boot:run
 ```
 
 Then, start the User Service, Product Service, and Payment Service:
 
 ```bash
-cd user-service
+cd User
 mvn spring-boot:run
 
-cd ../product-service
+cd Product
 mvn spring-boot:run
 
-cd ../payment-service
+cd Payment
 mvn spring-boot:run
 ```
 
 Finally, start the API Gateway:
 
 ```bash
-cd api-gateway
+cd API-Gateway
 mvn spring-boot:run
 ```
 
