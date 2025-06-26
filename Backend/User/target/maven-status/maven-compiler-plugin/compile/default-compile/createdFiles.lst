@@ -1,0 +1,10 @@
+com\ShopEase\User\controllers\UserController.class
+com\ShopEase\User\configs\ApplicationConfig.class
+com\ShopEase\User\dtos\LoginDto.class
+com\ShopEase\User\services\UserService.class
+com\ShopEase\User\repositories\UserRepository.class
+com\ShopEase\User\entities\User.class
+com\ShopEase\User\UserApplication.class
+com\ShopEase\User\configs\SecurityConfig.class
+com\ShopEase\User\entities\Roles.class
+com\ShopEase\User\services\JwtService.class

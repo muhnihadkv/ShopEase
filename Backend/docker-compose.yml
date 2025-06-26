@@ -1,0 +1,83 @@
+services:
+  # ---------------- Database ----------------
+  mysql-micro:
+    image: mysql:latest
+    container_name: mysql-micro
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-micro-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+  # ---------------- Eureka Server ----------------
+  eureka-server:
+    build: ./Service-Registry
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+
+  # ---------------- API Gateway ----------------
+  api-gateway:
+    build: ./API-Gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - user-service
+      - product-service
+      - payment-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  # ---------------- User Service ----------------
+  user-service:
+    build: ./User
+    container_name: user-service
+    ports:
+      - "9191:9191"
+    depends_on:
+      - mysql-micro
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-micro:3306/user_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+
+
+  # ---------------- Product Service ----------------
+  product-service:
+    build: ./Product
+    container_name: product-service
+    ports:
+      - "9192:9192"
+    depends_on:
+      - mysql-micro
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-micro:3306/product_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+
+  # ---------------- Payment Service ----------------
+  payment-service:
+    build: ./Payment
+    container_name: payment-service
+    ports:
+      - "9193:9193"
+    depends_on:
+      - mysql-micro
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-micro:3306/payment_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+
+volumes:
+  mysql-micro-data:
