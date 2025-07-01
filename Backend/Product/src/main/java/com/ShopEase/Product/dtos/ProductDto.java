@@ -1,10 +1,12 @@
 package com.ShopEase.Product.dtos;
 
+import java.math.BigDecimal;
+
 public class ProductDto {
     private int productId;
     private String productName;
     private String description;
-    private double price;
+    private BigDecimal price;
     private int stock;
 
     public int getProductId() {
@@ -31,11 +33,11 @@ public class ProductDto {
         this.description = description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

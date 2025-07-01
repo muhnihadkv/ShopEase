@@ -1,11 +1,14 @@
 package com.ShopEase.Payment.dtos;
 
+import java.math.BigDecimal;
+
 public class PaymentRequest {
     private String productName;
-    private long price;
+    private BigDecimal price;
     private long quantity;
     private String currency;
     private int orderId;
+    private BigDecimal discount;
 
     public String getProductName() {
         return productName;
@@ -15,11 +18,11 @@ public class PaymentRequest {
         this.productName = productName;
     }
 
-    public long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -45,5 +48,13 @@ public class PaymentRequest {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 }

@@ -23,6 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -59,13 +60,19 @@ public class PaymentService {
     public Mono<StripeResponse> checkoutProducts(PaymentRequest paymentRequest){
         return Mono.fromCallable(()-> {
             Stripe.apiKey = secretKey;
+            long price = paymentRequest.getPrice().longValue();
+            long discount = paymentRequest.getDiscount().longValue();
+
+            if (discount > price) {
+                throw new RuntimeException("Discount cannot be greater than price.");
+            }
 
             SessionCreateParams.LineItem.PriceData.ProductData productData = SessionCreateParams
                     .LineItem.PriceData.ProductData.builder()
                     .setName(paymentRequest.getProductName()).build();
 
             SessionCreateParams.LineItem.PriceData priceData = SessionCreateParams.LineItem.PriceData.builder()
-                    .setUnitAmount(paymentRequest.getPrice() * 100)
+                    .setUnitAmount((price -discount) * 100)
                     .setCurrency(paymentRequest.getCurrency() == null ? "USD" : paymentRequest.getCurrency())
                     .setProductData(productData)
                     .build();
@@ -109,7 +116,7 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setOrderId(orderId);
         payment.setStatus(status);
-        payment.setAmount(amount);
+        payment.setAmount(BigDecimal.valueOf(amount));
         paymentRepository.save(payment);
     }
 

@@ -1,9 +1,8 @@
 package com.ShopEase.Product.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 
 @Entity
 public class Product {
@@ -12,7 +11,10 @@ public class Product {
     private int productId;
     private String productName;
     private String description;
-    private double price;
+    private String currency;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
     private int stock;
 
     public Product() {
@@ -38,11 +40,11 @@ public class Product {
         this.description = description;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -52,5 +54,13 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }
