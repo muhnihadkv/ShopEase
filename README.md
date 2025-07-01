@@ -8,7 +8,8 @@ ShopEase is a simple e-commerce application built using Spring Boot that allows 
 - ✅ Reactive Programming with WebFlux – For efficient and non-blocking operations  
 - ✅ JWT Authentication – Secure access control for users  
 - ✅ Stripe Integration – Smooth and secure payment processing  
-- ✅ MySQL Database – Reliable and efficient data management  
+- ✅ MySQL Database – Reliable and efficient data management
+- ✅ Dockerized Microservices – Easy containerized deployment
 
 ## 🏗️ Microservices Architecture
 
@@ -16,7 +17,7 @@ ShopEase is built with a microservices architecture consisting of the following 
 
 1. User Service – Handles user authentication and profile management.  
 2. Product Service – Manages product listings, cart, and order management.  
-3. Payment Service – Handles payment processing via Stripe.  
+3. Payment Service – Handles Coupon feature & payment processing via Stripe.  
 4. API Gateway – Routes requests to the appropriate microservice.  
 5. Service Registry – Manages service discovery.
 
@@ -27,94 +28,60 @@ ShopEase is built with a microservices architecture consisting of the following 
 - Security: JWT (JSON Web Tokens)  
 - Payment Gateway: Stripe  
 - Service Discovery: Spring Cloud Netflix Eureka  
-- API Gateway: Spring Cloud Gateway  
+- API Gateway: Spring Cloud Gateway
+- Containerization: Docker & Docker Compose
 
-## 📌 Installation & Setup
+---
 
-### 1️⃣ Clone the repository
+## 📦 Docker Setup
 
-```bash
-git clone https://github.com/muhnihadkv/ShopEase.git
-cd ShopEase
-```
+### 1️⃣ Prerequisites
 
-### 2️⃣ Set up MySQL Databases
+* Docker and Docker Compose installed on your system.
+* Stripe CLI installed for local webhook testing.
 
-Ensure MySQL is installed and running. Create separate databases for each microservice:
+### 2️⃣ Build Docker Images
 
-```sql
-CREATE DATABASE user_db;
-CREATE DATABASE product_db;
-CREATE DATABASE payment_db;
-```
-
-Update the `application.properties` file in each microservice with its respective database credentials.
-
-🔹 Example (`src/main/resources/application.properties`)
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/user_db
-spring.datasource.username=root
-spring.datasource.password=yourpassword
-```
-
-Repeat this for product-service and payment-service with their respective database names.
-
-### 3️⃣ Configure Security Settings
-
-Update the User Service (`src/main/resources/application.properties`) with JWT security settings:
-
-```properties
-security.jwt.secret-key=your_jwt_secret_key
-security.jwt.expiration-time=3600000  # Token expiry in milliseconds (1 hour)
-```
-
-### 4️⃣ Set up Stripe Account
-
-1. Create an account on [Stripe](https://stripe.com/).
-2. Get your Secret API Key from the Stripe Dashboard (Developers -> API Keys).
-3. Set up webhooks for payment events.
-
-🔹 Update Payment Service `src/main/resources/application.properties`
-
-```properties
-stripe.secret-key=your_stripe_secret_key
-stripe.webhook.secret=your_webhook_secret
-```
-
-For webhook setup, refer to the [Stripe Webhooks Documentation](https://stripe.com/docs/webhooks).
-
-- If using localhost, you can use the [Stripe CLI](https://stripe.com/docs/stripe-cli) to forward webhooks.
-- If deploying in the cloud, set up webhooks in the Stripe Dashboard.
-
-### 5️⃣ Run the Services
-
-Start the Service Registry first:
+Run the following command from the root of the project:
 
 ```bash
-cd Service-Registry
-mvn spring-boot:run
+docker-compose build
 ```
 
-Then, start the User Service, Product Service, and Payment Service:
+### 3️⃣ Start the Containers
 
 ```bash
-cd User
-mvn spring-boot:run
-
-cd Product
-mvn spring-boot:run
-
-cd Payment
-mvn spring-boot:run
+docker-compose up
 ```
 
-Finally, start the API Gateway:
+This will start all the services:
+
+* MySQL Database (Port: 3307)
+* Eureka Server (Port: 8761)
+* API Gateway (Port: 8080)
+* User Service (Port: 9191)
+* Product Service (Port: 9192)
+* Payment Service (Port: 9193)
+
+### 4️⃣ Verify Eureka Dashboard
+
+Visit:
+
+```
+http://localhost:8761
+```
+
+You should see all microservices registered.
+
+### 5️⃣ Stripe Webhook (Local Testing)
+
+Run the Stripe CLI to listen for webhook events:
 
 ```bash
-cd API-Gateway
-mvn spring-boot:run
+stripe listen --forward-to http://localhost:9193/payment/webhook
 ```
+
+This will forward Stripe events to your local API Gateway.
 
 ### 6️⃣ Access the Application
 
@@ -123,6 +90,51 @@ All requests should go through the API Gateway on port 8080:
 ```
 http://localhost:8080
 ```
+
+---
+
+## 🛠️ Manual Setup (Without Docker)
+
+If you prefer to run the services manually, follow these steps:
+
+### ✅ Database Setup
+
+Ensure MySQL is running and create the following databases:
+
+```sql
+CREATE DATABASE user_db;
+CREATE DATABASE product_db;
+CREATE DATABASE payment_db;
+```
+
+Update the `application.properties` or `application.yml` files in each service with your local MySQL credentials.
+
+
+## ⚙️ Running Services (Without Docker)
+
+Start the Service Registry:
+
+```bash
+cd Service-Registry
+mvn spring-boot:run
+```
+
+Start the other services:
+
+```bash
+cd User && mvn spring-boot:run
+cd Product && mvn spring-boot:run
+cd Payment && mvn spring-boot:run
+cd API-Gateway && mvn spring-boot:run
+```
+
+Access the application via:
+
+```
+http://localhost:8080
+```
+
+---
 
 ## 📌 Future Improvements
 
